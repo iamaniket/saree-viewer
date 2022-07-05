@@ -1,0 +1,80 @@
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform: -webkit-translate(-50%, -50%);
+  transform: -moz-translate(-50%, -50%);
+  transform: -ms-translate(-50%, -50%);
+  color: darkred;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+.tableValue{
+  border-radius: 5px;
+  height: 40px;
+}
+
+.caption {
+  font-size: 16px !important;
+  text-align: center !important;
+}
+
+.back-button{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000000;
+}
+
+.allow-rotate{
+  text-align: center;
+  position: fixed;
+  top: 50px;
+  left: 0px;
+  right: 0px;
+  z-index: 1000000;
+  color: white;
+}
+
+.select-model{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1000000;
+  padding: 10px;
+  background: #979797;
+  border-radius: 0px 0px 5px 0px;
+}
+
+.selected{
+  border: double 3px #196b08;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
