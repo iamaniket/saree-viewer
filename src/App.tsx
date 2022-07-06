@@ -6,6 +6,7 @@ import { Button, Grid, Paper, Table, TableCell, TableContainer, TableHead, Table
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import isMobile from "is-mobile";
 
+const assetUrl = "https://raw.githubusercontent.com/iamaniket/saree-viewer/main/public/"
 
 function App() {
   const [modelLoading, setModelLoading] = useState(true);
@@ -33,8 +34,8 @@ function App() {
     setModelLoading(true);
     setSelcetionMode(false);
     //@ts-ignore
-    viewerInit.loadSelectedModels(model.name, "Saree_1_DIFF1", "Black", "Black", true);
-    await setSelctedmfdc({ m: model.name + "", f: selctedmfdc.f, d: "Saree_1_DIFF1", sc: "Black", bc: "Black" });
+    viewerInit.loadSelectedModels(model.name, assetUrl + "Saree_1_DIFF1", "Black", "Black", true);
+    await setSelctedmfdc({ m: model.name + "", f: selctedmfdc.f, d: assetUrl + "models/Saree_1_DIFF1", sc: "models/Black", bc: "models/Black" });
     setPrice(1000);
   }
 
@@ -42,7 +43,7 @@ function App() {
     setModelLoading(true);
     setSelcetionMode(true);
     //@ts-ignore
-    viewerInit.loadInitModels(['models/Girl_1.gltf', 'models/Girl_2.gltf', 'models/Girl_3.gltf']);
+    viewerInit.loadInitModels([assetUrl + 'models/Girl_1.gltf', assetUrl + 'models/Girl_2.gltf', assetUrl + 'models/Girl_3.gltf']);
   }
 
   const fabricClick = (fabricName: string) => {
@@ -50,15 +51,15 @@ function App() {
     console.log(fabricName);
   }
 
-  const designClick = (designName: string) => {
+  const designClick = (designName: string, index: number) => {
     setModelLoading(true);
     setSelctedmfdc({ m: selctedmfdc.m, f: selctedmfdc.f, d: designName, sc: selctedmfdc.sc, bc: selctedmfdc.bc });
     //@ts-ignore
-    viewerInit.loadSelectedModels(selctedmfdc.m, designName, selctedmfdc.sc, selctedmfdc.bc, false);
-    setPrice(priceBase + Number(designName) * 100 * 2)
+    viewerInit.loadSelectedModels(selctedmfdc.m, assetUrl + designName, selctedmfdc.sc, selctedmfdc.bc, false);
+    setPrice(priceBase + (Number(selctedmfdc.d) * 100 * 2))
   }
 
-  const sareeColorClick = (colorName: string) => {
+  const sareeColorClick = (colorName: string, index: number) => {
     setModelLoading(true);
     setSelctedmfdc({ m: selctedmfdc.m, f: selctedmfdc.f, d: selctedmfdc.d, sc: colorName, bc: selctedmfdc.bc });
     //@ts-ignore
@@ -68,7 +69,7 @@ function App() {
   }
 
 
-  const blouseColorClick = (colorName: string) => {
+  const blouseColorClick = (colorName: string, index: number) => {
     setModelLoading(true);
     setSelctedmfdc({ m: selctedmfdc.m, f: selctedmfdc.f, d: selctedmfdc.d, bc: colorName, sc: selctedmfdc.sc });
     //@ts-ignore
@@ -107,8 +108,8 @@ function App() {
                         <TableCell align="center" colSpan={4} style={{ padding: "2px" }} >Design</TableCell>
                       </TableRow>
                       <TableRow>
-                        {designs.map((currentDesign) => (
-                          <TableCell key={currentDesign} align="center" style={{ padding: "2px", maxWidth: "150px" }} onClick={() => designClick(currentDesign)}>
+                        {designs.map((currentDesign, index) => (
+                          <TableCell key={currentDesign} align="center" style={{ padding: "2px", maxWidth: "150px" }} onClick={() => designClick(currentDesign, index)}>
                             <div className={"tableValue " + (currentDesign === selctedmfdc.d ? "selected" : "")} style={{ backgroundImage: 'url("./thumb/' + currentDesign + '.jpg")' }}>
                             </div>
                           </TableCell>
@@ -124,8 +125,8 @@ function App() {
                         <TableCell align="center" colSpan={6} style={{ padding: "2px" }} >Saree Color</TableCell>
                       </TableRow>
                       <TableRow>
-                        {sarerColor.map((colorColor) => (
-                          <TableCell key={colorColor} align="center" onClick={() => sareeColorClick(colorColor)} style={{ padding: "2px", maxWidth: "150px" }}>
+                        {sarerColor.map((colorColor, index) => (
+                          <TableCell key={colorColor} align="center" onClick={() => sareeColorClick(colorColor, index)} style={{ padding: "2px", maxWidth: "150px" }}>
                             <div className={"tableValue " + (colorColor === selctedmfdc.sc ? "selected" : "")} style={{ backgroundColor: colorColor }}>
                             </div>
                           </TableCell>
@@ -141,8 +142,8 @@ function App() {
                         <TableCell align="center" colSpan={6} style={{ padding: "2px" }} >Blouse Color</TableCell>
                       </TableRow>
                       <TableRow>
-                        {blouseColor.map((colorColor) => (
-                          <TableCell key={colorColor + "01"} align="center" onClick={() => blouseColorClick(colorColor)} style={{ padding: "2px" }}>
+                        {blouseColor.map((colorColor, index) => (
+                          <TableCell key={colorColor + "01"} align="center" onClick={() => blouseColorClick(colorColor, index)} style={{ padding: "2px" }}>
                             <div className={"tableValue " + (colorColor === selctedmfdc.bc ? "selected" : "")} style={{ backgroundColor: colorColor }}>
                             </div>
                           </TableCell>
@@ -161,9 +162,6 @@ function App() {
                     </TableHead>
                   </Table>
                 </TableContainer>
-                <div>
-                  <Button variant="contained" style={{ marginTop: "2%", pointerEvents: "all", width: "100%" }} >Continue</Button>
-                </div>
               </Grid>
               <Grid item xs={3} md={1} >
               </Grid>
