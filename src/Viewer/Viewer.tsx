@@ -6,7 +6,7 @@
 
 import isMobile from "is-mobile";
 import React from "react";
-import { ACESFilmicToneMapping, CylinderGeometry, Mesh, MeshStandardMaterial, Object3D, PerspectiveCamera, PMREMGenerator, Raycaster, sRGBEncoding, Vector2 } from "three";
+import { ACESFilmicToneMapping, CylinderGeometry, Mesh, MeshStandardMaterial, Object3D, PerspectiveCamera, PMREMGenerator, Raycaster, sRGBEncoding, TorusGeometry,Vector2 } from "three";
 
 import { Box3 } from "three/src/math/Box3";
 import { Vector3 } from "three/src/math/Vector3";
@@ -15,11 +15,6 @@ import { WebGLRenderer } from "three/src/renderers/WebGLRenderer";
 import { Scene } from "three/src/scenes/Scene";
 import { OrbitControls } from "../lib/OrbitControls.js";
 import { RoomEnvironment } from "../lib/RoomEnvironment.js";
-// import { EffectComposer } from "../lib/EffectComposer";
-// import { RenderPass } from '../lib/RenderPass.js';
-// import { ShaderPass } from '../lib/ShaderPass.js';
-// import { OutlinePass } from '../lib/OutlinePass.js';
-// import { FXAAShader } from '../lib/shaders/FXAAShader.js';
 
 import { loadModel } from "./ModelLoader";
 
@@ -61,14 +56,9 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
   cylinder2.receiveShadow = true;
   cylinder2.castShadow = true;
   cylinder2.position.y = -0.2;
-
-
   let gltf = await loadModel(name, design + "_" + sareeColor + ".jpg", blouseColor + ".jpg");
-
   this.model1.name = name;
   this.model1.add(gltf.scene);
-  this.model1.add(cylinder);
-  this.model1.add(cylinder2);
   if (resetView)
    this.setIsoView();
   this.props.allModelLoadCallback();
@@ -78,9 +68,29 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
   this.model1.children = [];
   let gltf = await loadModel(modelList[0], "", "");
 
-  const geometry = new CylinderGeometry(1.3, 1.3, .1, 32);
-  const material = new MeshStandardMaterial({ color: 0x571616 });
-  const geometry2 = new CylinderGeometry(1.5, 1.5, .1, 32);
+  const torusGeometry = new TorusGeometry( 1.3, 0.005, 16, 64 );
+  const meshBasicMaterial = new MeshStandardMaterial( { color: 0xff0000 } );
+  torusGeometry.rotateX(1.5708);
+  const torus1 = new Mesh( torusGeometry, meshBasicMaterial );
+  torus1.position.y = -0.05;
+  const torus2 = new Mesh( torusGeometry, meshBasicMaterial );
+  torus2.position.y = -0.15;
+
+  const torusGeometry2 = new TorusGeometry( 1.5, 0.005, 16, 64 );
+  torusGeometry2.rotateX(1.5708);
+  const torus3 = new Mesh( torusGeometry2, meshBasicMaterial );
+  torus3.position.y = -0.15;
+  const torus4 = new Mesh( torusGeometry2, meshBasicMaterial );
+  torus4.position.y = -0.3;
+
+  this.floor.add( torus1 );
+  // this.floor.add( torus2 );
+  this.floor.add( torus3 );
+  // this.floor.add( torus4 );
+
+  const geometry = new CylinderGeometry(1.3, 1.3, .1, 64);
+  const material = new MeshStandardMaterial({ color: 0x010101 });
+  const geometry2 = new CylinderGeometry(1.5, 1.5, .1, 64);
   const cylinder = new Mesh(geometry, material);
   const cylinder2 = new Mesh(geometry2, material);
   cylinder.receiveShadow = true;
@@ -110,7 +120,7 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
 
 
   gltf = await loadModel(modelList[2], "", "");
-  gltf.scene.position.x = 0.875;
+  gltf.scene.position.x = 0.75;
   gltf.scene.position.z = -0.5;
   this.model3.name = modelList[2];//'models/Girl_3_Dress_3.gltf'
   gltf.scene.castShadow = true;
@@ -127,10 +137,6 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
   if (this.props.selectionMode) {
    this.loadInitModels(['models/Girl_1.gltf', 'models/Girl_2.gltf', 'models/Girl_3.gltf']);
   }
-
-  // Placeholder for light
-  // const ambientLight = new AmbientLight(0xffffff);
-  // this.scene.add(ambientLight);
 
   this.renderer = new WebGLRenderer({ canvas: document.getElementById("viewer-3d") as HTMLCanvasElement, antialias: true, alpha: true });
   this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -149,31 +155,11 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
   this.renderer.toneMapping = ACESFilmicToneMapping;
   this.renderer.toneMappingExposure = 1;
   this.renderer.outputEncoding = sRGBEncoding;
-  this.renderer.pixelRatio = 1;
+  this.renderer.setPixelRatio(window.devicePixelRatio);
 
   const environment = new RoomEnvironment();
   const pmremGenerator = new PMREMGenerator(this.renderer);
   this.scene.environment = pmremGenerator.fromScene(environment).texture;
-
-  // this.composer = new EffectComposer(this.renderer);
-  // const renderPass = new RenderPass(this.scene, this.camera);
-  // this.composer.addPass(renderPass);
-
-  // this.outlinePass = new OutlinePass(new Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera);
-  // this.composer.addPass(this.outlinePass);
-
-  // const textureLoader = new TextureLoader();
-  // const self = this;
-  // textureLoader.load('tri_pattern.jpg', function (texture) {
-
-  //  self.outlinePass.patternTexture = texture;
-  //  texture.wrapS = RepeatWrapping;
-  //  texture.wrapT = RepeatWrapping;
-  // });
-
-  // this.effectFXAA = new ShaderPass(FXAAShader);
-  // this.effectFXAA.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-  // this.composer.addPass(this.effectFXAA);
 
   window.addEventListener("resize", this.onWindowResize.bind(this));
   this.renderer.domElement.style.touchAction = 'none';
@@ -208,28 +194,12 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
 
  onPointerDown(event: MouseEvent) {
   this._drag = false;
-
-  // if (this.props.selectionMode) {
-  //  this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  //  this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-  //  const result = this.checkIntersection();
-  //  if (result) {
-  //   this.onModelSelect(result);
-  //  }
-  // }
  }
 
  onPointerMove(event: MouseEvent) {
   this._drag = true;
-
-
-  // if (event.isPrimary === false) return;
-
   this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-  // this.checkIntersection();
  }
 
  private checkIntersection(): { name: string, id: number } | undefined {
@@ -284,7 +254,7 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
 
   var dirVec = new Vector3(0, 0, 1);
   var position = center.clone();
-  position.addScaledVector(dirVec.normalize(), distance * 1);
+  position.addScaledVector(dirVec.normalize(), distance * 0.7);
   camera.position.set(position.x, position.y, position.z);
   camera.lookAt(center);
   camera.updateProjectionMatrix();
@@ -293,6 +263,9 @@ export class Viewer extends React.Component<({ selectionMode: boolean, allModelL
  animation() {
   this.controls.update();
   // this.composer.render();
+  // if(){
+    this.scene.rotation.y += 0.0005; 
+  // }
   this.renderer.render(this.scene, this.camera);
  }
 

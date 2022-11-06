@@ -6,7 +6,7 @@ import { Button, Grid, Paper, Table, TableCell, TableContainer, TableHead, Table
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import isMobile from "is-mobile";
 
-const assetUrl = "https://raw.githubusercontent.com/iamaniket/saree-viewer/main/public/"
+const assetUrl = ""
 
 function App() {
   const [modelLoading, setModelLoading] = useState(true);
@@ -35,7 +35,7 @@ function App() {
     setSelcetionMode(false);
     //@ts-ignore
     viewerInit.loadSelectedModels(model.name, assetUrl + "Saree_1_DIFF1", "Black", "Black", true);
-    await setSelctedmfdc({ m: model.name + "", f: selctedmfdc.f, d: assetUrl + "models/Saree_1_DIFF1", sc: "models/Black", bc: "models/Black" });
+    await setSelctedmfdc({ m: model.name + "", f: selctedmfdc.f, d: assetUrl + "Saree_1_DIFF1", sc: "Black", bc: "Black" });
     setPrice(1000);
   }
 
@@ -79,8 +79,8 @@ function App() {
 
 
   return (
-    <div style={{ backgroundImage: "radial-gradient(90% 100% at center top, rgb(236, 236, 236), rgb(90, 90, 90))" }}>
-      <div className="allow-rotate" >Rotate model 360</div>
+    <div style={{ backgroundImage: "radial-gradient(90% 100% at center top, rgb(0, 0, 0), rgb(12, 12, 12))" }}>
+      <div className="allow-rotate" ></div>
       {modelLoading ? (
         <div className="centered">
           <div className="loader" />
@@ -105,11 +105,11 @@ function App() {
                   <Table aria-label="caption table">
                     <TableHead >
                       <TableRow style={{ background: "orange" }}>
-                        <TableCell align="center" colSpan={4} style={{ padding: "2px" }} >Design</TableCell>
+                        <TableCell align="center" colSpan={4} style={{ padding: "2px", lineHeight: 1.2, }} >Design</TableCell>
                       </TableRow>
                       <TableRow>
                         {designs.map((currentDesign, index) => (
-                          <TableCell key={currentDesign} align="center" style={{ padding: "2px", maxWidth: "150px" }} onClick={() => designClick(currentDesign, index)}>
+                          <TableCell key={currentDesign} align="center" style={{ padding: "2px",  maxWidth: "150px" }} onClick={() => designClick(currentDesign, index)}>
                             <div className={"tableValue " + (currentDesign === selctedmfdc.d ? "selected" : "")} style={{ backgroundImage: 'url("./thumb/' + currentDesign + '.jpg")' }}>
                             </div>
                           </TableCell>
@@ -122,7 +122,7 @@ function App() {
                   <Table aria-label="caption table">
                     <TableHead >
                       <TableRow style={{ background: "orange" }}>
-                        <TableCell align="center" colSpan={6} style={{ padding: "2px" }} >Saree Color</TableCell>
+                        <TableCell align="center" colSpan={6} style={{ padding: "2px", lineHeight: 1.2 }} >Saree Color</TableCell>
                       </TableRow>
                       <TableRow>
                         {sarerColor.map((colorColor, index) => (
@@ -139,7 +139,7 @@ function App() {
                   <Table aria-label="caption table">
                     <TableHead >
                       <TableRow style={{ background: "orange" }}>
-                        <TableCell align="center" colSpan={6} style={{ padding: "2px" }} >Blouse Color</TableCell>
+                        <TableCell align="center" colSpan={6} style={{ padding: "2px", lineHeight: 1.2 }} >Blouse Color</TableCell>
                       </TableRow>
                       <TableRow>
                         {blouseColor.map((colorColor, index) => (
@@ -148,16 +148,6 @@ function App() {
                             </div>
                           </TableCell>
                         ))}
-                      </TableRow>
-                    </TableHead>
-                  </Table>
-                </TableContainer>
-                <TableContainer component={Paper} elevation={3} style={{ marginTop: "2%", pointerEvents: "all" }}>
-                  <Table aria-label="caption table">
-                    <TableHead >
-                      <TableRow >
-                        <TableCell align="center" colSpan={1} style={{ background: "orange", padding: "2px" }}>Price</TableCell>
-                        <TableCell align="center" colSpan={1} style={{ padding: "2px" }} >{price}</TableCell>
                       </TableRow>
                     </TableHead>
                   </Table>
